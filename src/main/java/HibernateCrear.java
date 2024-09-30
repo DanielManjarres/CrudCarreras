@@ -2,43 +2,60 @@ import entidades.Carrera;
 import jakarta.persistence.EntityManager;
 import utilidades.JpaUtil;
 
+import javax.swing.*;
 import java.util.Scanner;
 
+import entidades.Carrera;
+import jakarta.persistence.EntityManager;
+import utilidades.JpaUtil;
+
+import javax.swing.*;
+
 public class HibernateCrear {
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Carrera ca = new Carrera();
 
         // Solicitamos los datos de la nueva carrera al usuario
-        System.out.println("Ingrese el nombre de la nueva carrera:");
-        String nombre = scanner.nextLine();
+        String nombre = JOptionPane.showInputDialog(null, "Ingrese nuevo nombre de carrera: ", ca.getNombre());
+        String tipo = JOptionPane.showInputDialog(null, "Ingrese tipo de carrera (número): ", ca.getTipo());
+        String idfacultad = JOptionPane.showInputDialog(null, "Ingrese ID de facultad (número): ", ca.getIdFacultad());
 
-        System.out.println("Ingrese el tipo de carrera (ingrese un número):");
-        int tipo = Integer.parseInt(scanner.nextLine());
+        // Validamos las entradas
+        if (nombre == null || nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El nombre de la carrera no puede estar vacío.");
+            return;
+        }
 
-        System.out.println("Ingrese el ID de la facultad asociada:");
-        int idFacultad = Integer.parseInt(scanner.nextLine());
-
-        // Creamos una nueva instancia de Carrera
-        Carrera nuevaCarrera = new Carrera();
-        nuevaCarrera.setNombre(nombre);
-        nuevaCarrera.setTipo(tipo);
-        nuevaCarrera.setIdFacultad(idFacultad);
-
-        // Obtenemos el EntityManager
-        EntityManager em = JpaUtil.getEntityManager();
         try {
-            // Iniciamos una transacción
-            em.getTransaction().begin();
-            // Persistimos la entidad Carrera
-            em.persist(nuevaCarrera);
-            // Confirmamos la transacción
-            em.getTransaction().commit();
-            System.out.println("Carrera creada exitosamente!");
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            System.out.println("Error al crear la carrera: " + e.getMessage());
-        } finally {
-            em.close();
+            // Validación de tipo y idfacultad como números enteros
+            int tipoInt = Integer.parseInt(tipo);
+            int idFacultadInt = Integer.parseInt(idfacultad);
+
+            // Asignamos los valores validados a la nueva instancia de Carrera
+            ca.setNombre(nombre);
+            ca.setTipo(tipoInt);
+            ca.setIdFacultad(idFacultadInt);
+
+            // Obtenemos el EntityManager
+            EntityManager em = JpaUtil.getEntityManager();
+            try {
+                // Iniciamos una transacción
+                em.getTransaction().begin();
+                // Persistimos la entidad Carrera
+                em.persist(ca);
+                // Confirmamos la transacción
+                em.getTransaction().commit();
+                JOptionPane.showMessageDialog(null, "Carrera creada exitosamente!");
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+                JOptionPane.showMessageDialog(null, "Error al crear la carrera: " + e.getMessage());
+            } finally {
+                em.close();
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El tipo y el ID de facultad deben ser números válidos.");
         }
     }
 }

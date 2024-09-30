@@ -1,9 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                 https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="default">
 
+    <persistence-unit name="ejemploJPA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>entidades.Carrera</class> <!-- Asegúrate de que tus entidades estén listadas aquí -->
+        <properties>
+            <!-- Configuración de la base de datos -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/cue"/>
+            <property name="jakarta.persistence.jdbc.user" value="Daniel"/>
+            <property name="jakarta.persistence.jdbc.password" value="2209"/>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+
+            <!-- Configuración de Hibernate -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- Crea/actualiza tablas automáticamente -->
+            <property name="hibernate.show_sql" value="true"/> <!-- Muestra las consultas SQL en consola -->
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
     </persistence-unit>
+
 </persistence>
+
